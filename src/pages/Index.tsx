@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/trading/Navbar";
+import { HeroMetrics } from "@/components/trading/HeroMetrics";
 import { MarketHours } from "@/components/trading/MarketHours";
-import { ScanBanner } from "@/components/trading/ScanBanner";
-import { ControlPanel } from "@/components/trading/ControlPanel";
-import { MetricsStrip } from "@/components/trading/MetricsStrip";
 import { MarketBreakdown } from "@/components/trading/MarketBreakdown";
 import { PositionsTable } from "@/components/trading/PositionsTable";
 import { DecisionsFeed } from "@/components/trading/DecisionsFeed";
@@ -16,11 +14,10 @@ import {
 } from "@/data/mockData";
 
 const TABS = [
-  { id: "overview", label: "Overview" },
-  { id: "watchlist", label: "Watchlist" },
-  { id: "charts", label: "Charts" },
-  { id: "history", label: "History" },
-  { id: "tax", label: "Tax" },
+  { id: "overview", label: "Overview", icon: "◎" },
+  { id: "watchlist", label: "Watchlist", icon: "◉" },
+  { id: "history", label: "History", icon: "☰" },
+  { id: "tax", label: "Tax", icon: "⊞" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -30,96 +27,99 @@ const Index = () => {
   const [halted, setHalted] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar status={mockScanStatus} />
+    <div className="min-h-screen bg-background noise">
+      <Navbar
+        status={mockScanStatus}
+        halted={halted}
+        onHalt={() => { if (confirm("Pause trading?")) setHalted(true); }}
+        onResume={() => setHalted(false)}
+        onSellAll={() => { if (confirm("Sell ALL and stop?")) setHalted(true); }}
+      />
 
-      <div className="container px-6 py-6">
-        <MarketHours data={mockMarketHours} />
-        <ScanBanner status={mockScanStatus} />
-        <ControlPanel
-          halted={halted}
-          onHalt={() => { if (confirm("Pause trading? The bot will stop scanning. Current positions stay open.")) setHalted(true); }}
-          onResume={() => setHalted(false)}
-          onSellAll={() => { if (confirm("Sell ALL open positions immediately and stop the bot?\n\nThis cannot be undone.")) setHalted(true); }}
-        />
-
-        {/* Tab bar */}
-        <div className="flex gap-1 mb-5 border-b border-border">
+      <main className="max-w-[1600px] mx-auto px-8 py-6">
+        {/* Tab bar — minimal pill style */}
+        <div className="flex items-center gap-1 mb-6 p-1 rounded-2xl bg-secondary/30 w-fit">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2 pb-2.5 text-[0.82rem] font-semibold tracking-wide border-b-2 -mb-px transition-colors ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 activeTab === tab.id
-                  ? "text-foreground border-primary"
-                  : "text-muted-foreground border-transparent hover:text-secondary-foreground"
+                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
               }`}
             >
+              <span className="text-xs">{tab.icon}</span>
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Tab content */}
+        {/* ── OVERVIEW ── */}
         {activeTab === "overview" && (
-          <div>
-            <MetricsStrip account={mockAccount} stats={mockStats} positions={mockPositions} />
-            <MarketBreakdown stats={mockStats} positions={mockPositions} />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-lg border border-border bg-card p-5">
-                <div className="text-[0.6rem] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                  Open Positions
-                </div>
-                <PositionsTable positions={mockPositions} onSell={(s) => alert(`Selling ${s}`)} />
+          <div className="space-y-6">
+            {/* Hero metrics bar */}
+            <HeroMetrics account={mockAccount} stats={mockStats} positions={mockPositions} />
+
+            {/* Bento grid: Markets + Positions + Decisions */}
+            <div className="grid grid-cols-12 gap-6">
+              {/* Left column: Market hours + Market breakdown */}
+              <div className="col-span-4 space-y-6">
+                <MarketHours data={mockMarketHours} />
+                <MarketBreakdown stats={mockStats} positions={mockPositions} />
               </div>
-              <div className="rounded-lg border border-border bg-card p-5">
-                <div className="text-[0.6rem] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-                  AI Decisions Feed
+
+              {/* Center: Positions */}
+              <div className="col-span-5">
+                <div className="glass rounded-2xl p-6 h-full">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Open Positions</h3>
+                  <PositionsTable positions={mockPositions} onSell={(s) => alert(`Selling ${s}`)} />
                 </div>
-                <DecisionsFeed decisions={mockDecisions} />
+              </div>
+
+              {/* Right: AI Decisions */}
+              <div className="col-span-3">
+                <div className="glass rounded-2xl p-6 h-full">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-5 w-5 rounded-lg bg-accent/10 flex items-center justify-center">
+                      <span className="text-xs">🤖</span>
+                    </div>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Decisions</h3>
+                  </div>
+                  <DecisionsFeed decisions={mockDecisions} />
+                </div>
               </div>
             </div>
           </div>
         )}
 
+        {/* ── WATCHLIST ── */}
         {activeTab === "watchlist" && (
-          <div className="rounded-lg border border-border bg-card p-5">
+          <div className="glass rounded-2xl p-6">
             <WatchlistTable data={mockWatchlist} />
           </div>
         )}
 
-        {activeTab === "charts" && (
-          <div className="rounded-lg border border-border bg-card p-5">
-            <div className="text-[0.6rem] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-              Position Charts
-            </div>
-            <div className="text-secondary-foreground text-center py-10 text-[0.85rem]">
-              Charts require the TradingView lightweight-charts library connected to your bot's API.
-              <br />
-              <span className="text-muted-foreground text-[0.75rem]">Connect to localhost:5001 to see live candlestick charts.</span>
-            </div>
-          </div>
-        )}
-
+        {/* ── HISTORY ── */}
         {activeTab === "history" && (
-          <div className="rounded-lg border border-border bg-card p-5">
-            <div className="text-[0.6rem] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-              Trade History
-            </div>
+          <div className="glass rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-foreground mb-4">Trade History</h3>
             <TradesHistory trades={mockTrades} />
           </div>
         )}
 
+        {/* ── TAX ── */}
         {activeTab === "tax" && (
-          <div className="rounded-lg border border-border bg-card p-5">
+          <div className="glass rounded-2xl p-6">
             <TaxPanel data={mockTax} />
           </div>
         )}
 
-        <div className="text-center pt-6 pb-2 text-[0.6rem] tracking-widest text-border uppercase">
-          AI Trading Bot · Paper Mode · Data: yFinance & Alpaca · Not Financial Advice
+        {/* Footer */}
+        <div className="text-center pt-8 pb-4 text-[0.55rem] tracking-[0.2em] uppercase text-muted-foreground/30">
+          TradingBot · Paper Mode · Not Financial Advice
         </div>
-      </div>
+      </main>
     </div>
   );
 };
