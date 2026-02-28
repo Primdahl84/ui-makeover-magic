@@ -103,14 +103,16 @@ const Index = () => {
 
               {/* Center: AI Decisions */}
               <div className="col-span-4">
-                <div className="glass rounded-2xl p-6 h-full">
+                <div className="glass rounded-2xl p-6 h-full flex flex-col">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="h-5 w-5 rounded-lg bg-accent/10 flex items-center justify-center">
                       <span className="text-xs">🤖</span>
                     </div>
                     <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">AI Decisions</h3>
                   </div>
-                  <DecisionsFeed decisions={mockDecisions} />
+                  <div className="flex-1 overflow-y-auto min-h-0">
+                    <DecisionsFeed decisions={mockDecisions} />
+                  </div>
                 </div>
               </div>
 
@@ -121,18 +123,22 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Secondary row: Equity chart (compact) + Risk panel (larger) */}
-            <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-5">
-                <div className="glass rounded-2xl p-5">
+            {/* Secondary row: Equity + Risk — equal height */}
+            <div className="grid grid-cols-12 gap-6 items-stretch">
+              <div className="col-span-5 flex">
+                <div className="glass rounded-2xl p-5 flex flex-col w-full">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Equity — Today</h3>
-                  <EquityChart data={mockEquity} />
+                  <div className="flex-1 flex flex-col justify-center">
+                    <EquityChart data={mockEquity} />
+                  </div>
                 </div>
               </div>
-              <div className="col-span-7">
-                <div className="glass rounded-2xl p-6">
+              <div className="col-span-7 flex">
+                <div className="glass rounded-2xl p-6 flex flex-col w-full">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Risk & Exposure</h3>
-                  <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
+                  <div className="flex-1">
+                    <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
+                  </div>
                 </div>
               </div>
             </div>
