@@ -16,6 +16,7 @@ import {
 const TABS = [
   { id: "overview", label: "Overview", icon: "◎" },
   { id: "watchlist", label: "Watchlist", icon: "◉" },
+  { id: "charts", label: "Charts", icon: "◇" },
   { id: "history", label: "History", icon: "☰" },
   { id: "tax", label: "Tax", icon: "⊞" },
 ] as const;
