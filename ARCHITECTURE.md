@@ -452,3 +452,34 @@ The Flask backend serves data at `localhost:5001`. The dashboard should fetch fr
 - `POST /api/cancel-order/:id` — Cancel pending order
 
 Poll data every 5 seconds using React Query or setInterval.
+
+---
+
+## 9. Applying the Theme to web_dashboard.py
+
+The file `lovable/lovable-theme.css` contains the **exact CSS** that matches the Lovable dashboard design. To update `web_dashboard.py`:
+
+1. **Replace the entire `<style>...</style>` block** in `HTML_TEMPLATE` with the contents of `lovable/lovable-theme.css` (wrapped in `<style>` tags)
+2. **Update navbar inline styles**: Change the header background from `hsl(213 70% 5%/0.95)` to `hsl(240 15% 5% / 0.95)` and border from `hsl(210 45% 16%/0.6)` to `hsl(240 10% 14% / 0.6)`
+3. **Update all inline `hsl(213...)` / `hsl(210...)` references** in the HTML to use `hsl(240...)` equivalents:
+   - `hsl(213 50% 10%/...)` → `hsl(240 10% 12% / ...)`
+   - `hsl(210 45% 18%/...)` → `hsl(240 10% 18% / ...)`
+   - `hsl(213 48% 12%)` → `hsl(240 10% 12%)`
+   - `hsl(210 40% 16%/...)` → `hsl(240 10% 14% / ...)`
+   - `hsl(215,70%,6%)` → `hsl(240 15% 5%)`
+4. **Replace hardcoded `#22d3ee`** with `hsl(165 80% 48%)` (the `--primary` variable) where possible
+5. **Key visual differences** from the old theme:
+   - Background hue: 240° (neutral) instead of 215° (blue)
+   - Active tab: solid teal pill with dark text (not subtle grey highlight)
+   - Glass cards: neutral tint, less blue cast
+   - More contrast between card surfaces and background
+
+### Prompt for Claude Code:
+
+```
+Read lovable/lovable-theme.css and ARCHITECTURE.md. Replace the <style> block in 
+web_dashboard.py's HTML_TEMPLATE with the Lovable theme CSS. Also update all inline 
+hsl(213...) and hsl(210...) color values in the HTML to their hsl(240...) equivalents 
+as documented in ARCHITECTURE.md section 9. The active tab should be solid teal 
+(primary color) with dark text, not a grey highlight.
+```

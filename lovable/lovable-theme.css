@@ -1,0 +1,276 @@
+/*
+ * Lovable Dashboard Theme — Drop-in replacement for web_dashboard.py <style> block
+ * 
+ * INSTRUCTIONS FOR CLAUDE CODE:
+ * Replace the entire <style>...</style> section in web_dashboard.py's HTML_TEMPLATE
+ * with the contents of this file (wrapped in <style> tags).
+ *
+ * KEY DIFFERENCES from the old theme:
+ * 1. Background: neutral dark (240° hue) instead of blue (215° hue)
+ * 2. Glass cards: neutral tint instead of blue tint
+ * 3. Active tab: uses primary teal color instead of subtle grey
+ * 4. Borders: neutral grey instead of blue-grey
+ * 5. Overall: more contrast, cleaner, less blue cast
+ */
+
+:root {
+  /* Core palette — neutral dark, NOT blue-tinted */
+  --bg:          hsl(240, 15%, 5%);
+  --card:        hsl(240, 12%, 8%);
+  --primary:     hsl(165, 80%, 48%);   /* Teal/cyan */
+  --accent:      hsl(270, 60%, 60%);   /* Purple */
+  --positive:    hsl(165, 80%, 48%);
+  --negative:    hsl(0, 85%, 62%);
+  --warning:     hsl(45, 95%, 55%);
+  --info:        hsl(215, 80%, 60%);
+
+  /* Text */
+  --fg:          hsl(0, 0%, 95%);
+  --fg-dim:      hsl(240, 5%, 65%);
+  --muted-fg:    hsl(240, 5%, 40%);
+
+  /* Surfaces */
+  --secondary:   hsl(240, 10%, 12%);
+  --border:      hsl(240, 10%, 14%);
+  --border-dim:  hsl(240, 10%, 18%);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background:
+    radial-gradient(ellipse 100% 50% at 15% 0%, hsl(165 80% 48% / 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 85% 5%, hsl(270 60% 60% / 0.04) 0%, transparent 50%),
+    var(--bg);
+  color: var(--fg);
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+.mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+/* ── Glass Cards ── */
+.glass {
+  background: linear-gradient(135deg, hsl(240 12% 9% / 0.8), hsl(240 12% 6% / 0.6));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(240 10% 18% / 0.5);
+  border-radius: 1rem;
+}
+
+.gradient-border {
+  position: relative;
+  border: 1px solid hsl(165 80% 48% / 0.15) !important;
+  box-shadow: 0 0 40px hsl(165 80% 48% / 0.04), inset 0 1px 0 hsl(165 80% 48% / 0.08);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  background: linear-gradient(135deg, hsl(165 80% 48% / 0.4) 0%, hsl(270 60% 60% / 0.2) 50%, transparent 80%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--muted-fg);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Action Badges ── */
+.badge-buy {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px; border-radius: 9999px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
+  background: hsl(165 80% 48% / 0.12); color: hsl(165 80% 48%);
+  border: 1px solid hsl(165 80% 48% / 0.3);
+}
+.badge-sell {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px; border-radius: 9999px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
+  background: hsl(0 85% 62% / 0.12); color: hsl(0 85% 62%);
+  border: 1px solid hsl(0 85% 62% / 0.3);
+}
+.badge-hold {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px; border-radius: 9999px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
+  background: hsl(270 60% 60% / 0.12); color: hsl(270 60% 60%);
+  border: 1px solid hsl(270 60% 60% / 0.3);
+}
+.badge-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+.badge-buy .badge-dot  { background: var(--positive); }
+.badge-sell .badge-dot { background: var(--negative); }
+.badge-hold .badge-dot { background: var(--accent); }
+.positive { color: var(--positive); }
+.negative { color: var(--negative); }
+
+/* ── Tables ── */
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 0.4rem 0.7rem;
+  font-size: 0.6rem; font-weight: 600; color: var(--muted-fg);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  border-bottom: 1px solid hsl(240 10% 14% / 0.5);
+}
+td {
+  padding: 0.6rem 0.7rem; font-size: 0.84rem;
+  border-bottom: 1px solid hsl(240 10% 12% / 0.6);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: hsl(240 10% 12% / 0.4); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(165 80% 48% / 0.2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(165 80% 48% / 0.4); }
+
+/* ── Animations ── */
+@keyframes spin       { to { transform: rotate(360deg); } }
+@keyframes pulse-glow { 0%,100% { opacity: 1; box-shadow: 0 0 8px hsl(165 80% 48% / 0.5); } 50% { opacity: 0.5; box-shadow: 0 0 4px hsl(165 80% 48% / 0.2); } }
+@keyframes pulse      { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ── Pill Tabs ── */
+.tab-bar {
+  display: flex; gap: 0.2rem;
+  background: hsl(240 10% 12% / 0.3);
+  border-radius: 1rem; padding: 0.25rem;
+  width: fit-content;
+}
+.tab-btn {
+  background: none; border: none;
+  color: var(--muted-fg);
+  padding: 0.42rem 1.05rem;
+  font-size: 0.78rem; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  letter-spacing: 0.02em;
+  border-radius: 0.75rem;
+  transition: color 0.15s, background 0.15s;
+}
+.tab-btn:hover { color: var(--fg-dim); background: hsl(240 10% 12% / 0.5); }
+.tab-active {
+  background: hsl(165 80% 48%) !important;
+  color: hsl(240 15% 5%) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 12px hsl(165 80% 48% / 0.3);
+}
+
+/* ── Market Badges ── */
+.mkt-badge {
+  font-size: 0.55rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 3px;
+  vertical-align: middle; margin-left: 4px;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.mkt-US { background: hsl(165 80% 48% / 0.15); color: hsl(165 80% 48%); }
+.mkt-EU { background: hsl(215 80% 60% / 0.15); color: hsl(215 80% 60%); }
+.mkt-DK { background: hsl(45 95% 55% / 0.15);  color: hsl(45 95% 55%); }
+.mkt-JP { background: hsl(15 75% 55% / 0.15);  color: hsl(15 75% 55%); }
+.mkt-IN { background: hsl(35 85% 55% / 0.15);  color: hsl(35 85% 55%); }
+.mkt-TW { background: hsl(180 50% 60% / 0.15); color: hsl(180 50% 60%); }
+.mkt-CA { background: hsl(270 40% 65% / 0.15); color: hsl(270 40% 65%); }
+
+/* ── Hero Stat Tiles ── */
+.hero-stat {
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.75rem;
+  background: hsl(240 10% 12% / 0.4);
+  border: 1px solid hsl(240 10% 14% / 0.3);
+}
+
+/* ── Hover-reveal Buttons ── */
+.sell-btn-wrap   { opacity: 0; transition: opacity 0.15s; }
+.cancel-btn-wrap { opacity: 0; transition: opacity 0.15s; }
+tr:hover .sell-btn-wrap   { opacity: 1; }
+tr:hover .cancel-btn-wrap { opacity: 1; }
+
+/* ── Market Gradient Cards ── */
+.mkt-card { border-radius: 0.5rem; padding: 0.45rem 0.65rem; margin-bottom: 0.25rem; }
+.mkt-card-US { background: linear-gradient(to right, hsl(165 80% 48% / 0.1), transparent);  border: 1px solid hsl(165 80% 48% / 0.25); }
+.mkt-card-EU { background: linear-gradient(to right, hsl(215 80% 60% / 0.1), transparent);  border: 1px solid hsl(215 80% 60% / 0.25); }
+.mkt-card-DK { background: linear-gradient(to right, hsl(45 95% 55% / 0.1), transparent);   border: 1px solid hsl(45 95% 55% / 0.25); }
+.mkt-card-JP { background: linear-gradient(to right, hsl(15 75% 55% / 0.1), transparent);   border: 1px solid hsl(15 75% 55% / 0.25); }
+.mkt-card-IN { background: linear-gradient(to right, hsl(35 85% 55% / 0.1), transparent);   border: 1px solid hsl(35 85% 55% / 0.25); }
+.mkt-card-TW { background: linear-gradient(to right, hsl(180 50% 60% / 0.1), transparent);  border: 1px solid hsl(180 50% 60% / 0.25); }
+.mkt-card-CA { background: linear-gradient(to right, hsl(270 40% 65% / 0.1), transparent);  border: 1px solid hsl(270 40% 65% / 0.25); }
+
+/* ── Scan Pill in Navbar ── */
+.scan-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.9rem; border-radius: 9999px;
+  font-size: 0.7rem; font-weight: 600;
+  background: hsl(240 10% 8%);
+  border: 1px solid hsl(240 10% 18%);
+  transition: all 0.3s;
+}
+.scan-pill.is-scanning {
+  background: hsl(45 95% 55% / 0.08);
+  border-color: hsl(45 95% 55% / 0.35);
+}
+
+/* ── Navbar Control Buttons ── */
+.ctrl-btn {
+  border: none; cursor: pointer;
+  font-family: inherit; font-size: 0.72rem; font-weight: 700;
+  border-radius: 0.5rem; padding: 0.35rem 0.9rem;
+  transition: all 0.15s; letter-spacing: 0.02em;
+}
+.ctrl-btn-halt {
+  background: hsl(240 10% 12%);
+  color: hsl(0 0% 80%);
+  border: 1px solid hsl(240 10% 18%);
+}
+.ctrl-btn-halt:hover {
+  background: hsl(240 10% 16%);
+  color: var(--fg);
+  border-color: hsl(240 10% 25%);
+}
+.ctrl-btn-sell {
+  background: hsl(0 85% 55% / 0.15);
+  color: hsl(0 85% 62%);
+  border: 1px solid hsl(0 85% 55% / 0.4);
+  text-shadow: 0 0 10px hsl(0 85% 55% / 0.3);
+}
+.ctrl-btn-sell:hover {
+  background: hsl(0 85% 55% / 0.25);
+  border-color: hsl(0 85% 55% / 0.6);
+}
+.ctrl-btn-resume {
+  background: hsl(165 80% 48% / 0.15);
+  color: hsl(165 80% 48%);
+  border: 1px solid hsl(165 80% 48% / 0.4);
+  text-shadow: 0 0 10px hsl(165 80% 48% / 0.3);
+}
+.ctrl-btn-resume:hover {
+  background: hsl(165 80% 48% / 0.25);
+  border-color: hsl(165 80% 48% / 0.6);
+}
+
+/* ── Risk Panel Bars ── */
+.risk-bar-track { height: 3px; border-radius: 2px; background: hsl(240 10% 12%); overflow: hidden; flex: 1; }
+.risk-bar-fill  { height: 3px; border-radius: 2px; transition: width 0.5s; }
+
+/* ── Noise Texture Overlay ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ── Navbar (update inline styles too) ── */
+/* Navbar background should be: hsl(240 15% 5% / 0.95) with border hsl(240 10% 14% / 0.6) */
