@@ -1,6 +1,7 @@
 import type {
   AccountData, Position, StatsData, Decision, Trade,
   ScanStatus, MarketHoursData, WatchlistData, TaxData,
+  PendingOrder, EquityPoint,
 } from "@/types/trading";
 
 export const mockAccount: AccountData = {
