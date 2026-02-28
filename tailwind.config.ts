@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'Cascadia Code', 'SF Mono', 'monospace'],
+        sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -55,15 +55,6 @@ export default {
         negative: "hsl(var(--negative))",
         warning: "hsl(var(--warning))",
         info: "hsl(var(--info))",
-        market: {
-          us: "hsl(var(--market-us))",
-          eu: "hsl(var(--market-eu))",
-          dk: "hsl(var(--market-dk))",
-          jp: "hsl(var(--market-jp))",
-          in: "hsl(var(--market-in))",
-          tw: "hsl(var(--market-tw))",
-          ca: "hsl(var(--market-ca))",
-        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
