@@ -1,6 +1,7 @@
 import type {
   AccountData, Position, StatsData, Decision, Trade,
   ScanStatus, MarketHoursData, WatchlistData, TaxData,
+  PendingOrder, EquityPoint,
 } from "@/types/trading";
 
 export const mockAccount: AccountData = {
@@ -154,3 +155,31 @@ export const mockTax: TaxData = {
     ],
   },
 };
+
+export const mockPendingOrders: PendingOrder[] = [
+  { id: "ord-001", symbol: "AAPL", type: "stop_loss", qty: 3, target_price: 259.85, current_price: 264.18, created_at: "2026-02-28T10:15:00Z" },
+  { id: "ord-002", symbol: "NVDA", type: "take_profit", qty: 5, target_price: 920.00, current_price: 875.20, created_at: "2026-02-28T10:13:00Z" },
+  { id: "ord-003", symbol: "MSFT", type: "limit_buy", qty: 4, target_price: 405.00, current_price: 415.20, created_at: "2026-02-28T09:00:00Z" },
+  { id: "ord-004", symbol: "SHEL", type: "stop_loss", qty: 12, target_price: 80.28, current_price: 83.51, created_at: "2026-02-28T09:56:00Z" },
+];
+
+export const mockEquity: EquityPoint[] = [
+  { time: "09:30", value: 100000.00 },
+  { time: "09:45", value: 99985.20 },
+  { time: "10:00", value: 99950.10 },
+  { time: "10:15", value: 99920.50 },
+  { time: "10:30", value: 99890.00 },
+  { time: "10:45", value: 99915.30 },
+  { time: "11:00", value: 99940.80 },
+  { time: "11:15", value: 99960.00 },
+  { time: "11:30", value: 99935.50 },
+  { time: "11:45", value: 99910.20 },
+  { time: "12:00", value: 99925.60 },
+  { time: "12:15", value: 99945.10 },
+  { time: "12:30", value: 99960.40 },
+  { time: "12:45", value: 99930.31 },
+  { time: "13:00", value: 99920.80 },
+  { time: "13:15", value: 99935.50 },
+  { time: "13:30", value: 99950.00 },
+  { time: "13:45", value: 99930.31 },
+];

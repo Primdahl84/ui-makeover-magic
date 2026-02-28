@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/trading-utils";
 import { Navbar } from "@/components/trading/Navbar";
 import { HeroMetrics } from "@/components/trading/HeroMetrics";
@@ -9,9 +9,14 @@ import { DecisionsFeed } from "@/components/trading/DecisionsFeed";
 import { TradesHistory } from "@/components/trading/TradesHistory";
 import { WatchlistTable } from "@/components/trading/WatchlistTable";
 import { TaxPanel } from "@/components/trading/TaxPanel";
+import { EquityChart } from "@/components/trading/EquityChart";
+import { RiskPanel } from "@/components/trading/RiskPanel";
+import { PendingOrders } from "@/components/trading/PendingOrders";
+import { toast } from "@/hooks/use-toast";
 import {
   mockAccount, mockPositions, mockStats, mockDecisions,
   mockTrades, mockScanStatus, mockMarketHours, mockWatchlist, mockTax,
+  mockPendingOrders, mockEquity,
 } from "@/data/mockData";
 
 const TABS = [
@@ -27,7 +32,18 @@ type TabId = (typeof TABS)[number]["id"];
 const Index = () => {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
   const [halted, setHalted] = useState(false);
+  const [pendingOrders, setPendingOrders] = useState(mockPendingOrders);
 
+  // Demo notification on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      toast({
+        title: "🟢 Trade Executed",
+        description: "BUY 3x AAPL @ $267.89 — filled",
+      });
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div className="min-h-screen bg-background noise">
       <Navbar
@@ -63,25 +79,46 @@ const Index = () => {
             {/* Hero metrics bar */}
             <HeroMetrics account={mockAccount} stats={mockStats} positions={mockPositions} />
 
+            {/* Equity chart */}
+            <div className="glass rounded-2xl p-6">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Portfolio Equity — Today</h3>
+              <EquityChart data={mockEquity} />
+            </div>
+
             {/* Bento grid: Markets + Positions + Decisions */}
             <div className="grid grid-cols-12 gap-6">
-              {/* Left column: Market hours + Market breakdown */}
-              <div className="col-span-4 space-y-6">
+              {/* Left column: Market hours + Risk */}
+              <div className="col-span-3 space-y-6">
                 <MarketHours data={mockMarketHours} />
-                <MarketBreakdown stats={mockStats} positions={mockPositions} />
-              </div>
-
-              {/* Center: Positions */}
-              <div className="col-span-5">
-                <div className="glass rounded-2xl p-6 h-full">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Open Positions</h3>
-                  <PositionsTable positions={mockPositions} onSell={(s) => alert(`Selling ${s}`)} />
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Risk & Exposure</h3>
+                  <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
                 </div>
               </div>
 
-              {/* Right: AI Decisions */}
-              <div className="col-span-3">
-                <div className="glass rounded-2xl p-6 h-full">
+              {/* Center: Positions + Pending Orders */}
+              <div className="col-span-5 space-y-6">
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Open Positions</h3>
+                  <PositionsTable positions={mockPositions} onSell={(s) => {
+                    toast({ title: "📤 Sell Order", description: `Selling all ${s} shares...` });
+                  }} />
+                </div>
+                <div className="glass rounded-2xl p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Orders</h3>
+                    <span className="text-[0.55rem] mono text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded-full">{pendingOrders.length} active</span>
+                  </div>
+                  <PendingOrders orders={pendingOrders} onCancel={(id) => {
+                    setPendingOrders(prev => prev.filter(o => o.id !== id));
+                    toast({ title: "❌ Order Cancelled", description: `Order ${id} removed` });
+                  }} />
+                </div>
+              </div>
+
+              {/* Right: AI Decisions + Market Breakdown */}
+              <div className="col-span-4 space-y-6">
+                <div className="glass rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="h-5 w-5 rounded-lg bg-accent/10 flex items-center justify-center">
                       <span className="text-xs">🤖</span>
@@ -90,6 +127,7 @@ const Index = () => {
                   </div>
                   <DecisionsFeed decisions={mockDecisions} />
                 </div>
+                <MarketBreakdown stats={mockStats} positions={mockPositions} />
               </div>
             </div>
           </div>

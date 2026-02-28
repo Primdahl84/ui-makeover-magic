@@ -130,3 +130,18 @@ export interface TaxYear {
 }
 
 export type TaxData = Record<string, TaxYear>;
+
+export interface PendingOrder {
+  id: string;
+  symbol: string;
+  type: "limit_buy" | "limit_sell" | "stop_loss" | "take_profit";
+  qty: number;
+  target_price: number;
+  current_price?: number;
+  created_at: string;
+}
+
+export interface EquityPoint {
+  time: string;
+  value: number;
+}
