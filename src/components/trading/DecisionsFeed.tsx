@@ -5,40 +5,32 @@ interface DecisionsFeedProps {
   decisions: Decision[];
 }
 
-function ActionBadge({ action }: { action: string }) {
-  const u = (action || "HOLD").toUpperCase();
-  const styles = {
-    BUY: "bg-positive/15 text-positive",
-    SELL: "bg-negative/15 text-negative",
-    HOLD: "bg-info/15 text-info",
-  };
+function ActionPill({ action }: { action: string }) {
+  const u = action.toUpperCase();
   return (
-    <span className={`inline-block px-2.5 py-px rounded-full text-[0.68rem] font-bold tracking-wide ${styles[u as keyof typeof styles] || styles.HOLD}`}>
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.6rem] font-bold uppercase tracking-wider ${
+      u === "BUY" ? "bg-positive/10 text-positive border border-positive/20" :
+      u === "SELL" ? "bg-negative/10 text-negative border border-negative/20" :
+      "bg-accent/10 text-accent border border-accent/20"
+    }`}>
+      <span className={`h-1 w-1 rounded-full ${
+        u === "BUY" ? "bg-positive" : u === "SELL" ? "bg-negative" : "bg-accent"
+      }`} />
       {u}
     </span>
   );
 }
 
-function ConfidenceBar({ confidence }: { confidence: number }) {
-  const pct = Math.min((confidence / 10) * 100, 100);
-  const color = confidence >= 7 ? "bg-positive" : confidence >= 5 ? "bg-warning" : "bg-negative";
-
-  return (
-    <div className="flex items-center gap-1.5 mt-1">
-      <div className="w-14 h-1 rounded-full bg-muted overflow-hidden shrink-0">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
-      </div>
-      <span className="mono text-[0.67rem] text-secondary-foreground">{confidence}/10</span>
-    </div>
-  );
-}
-
 export function DecisionsFeed({ decisions }: DecisionsFeedProps) {
   if (!decisions.length) {
-    return <div className="text-muted-foreground text-center py-10 text-[0.85rem]">No decisions yet</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+        <span className="text-3xl mb-3 opacity-30">🤖</span>
+        <p className="text-sm">No decisions yet</p>
+      </div>
+    );
   }
 
-  // Keep only latest per ticker
   const seen = new Set<string>();
   const latest = [...decisions].reverse().filter((d) => {
     if (!d.ticker || seen.has(d.ticker)) return false;
@@ -47,29 +39,39 @@ export function DecisionsFeed({ decisions }: DecisionsFeedProps) {
   });
 
   return (
-    <div className="max-h-[420px] overflow-y-auto">
+    <div className="space-y-1 max-h-[450px] overflow-y-auto pr-1">
       {latest.map((d, i) => (
-        <div key={d.ticker + i} className="py-3 border-b border-background last:border-b-0">
-          <div className="flex items-center justify-between mb-0.5">
+        <div key={d.ticker + i} className="rounded-xl p-3 hover:bg-secondary/30 transition-colors group">
+          <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div>
-                <span className="font-bold text-foreground text-[0.875rem]">{d.ticker}</span>
-                {d.company_name && (
-                  <p className="text-[0.67rem] text-muted-foreground mt-px">
-                    {d.company_name}{d.sector ? ` · ${d.sector}` : ""}
-                  </p>
-                )}
-              </div>
-              <ActionBadge action={d.action} />
+              <span className="font-bold text-foreground text-sm">{d.ticker}</span>
+              <ActionPill action={d.action} />
               {d.executed && (
-                <span className="text-[0.6rem] text-positive/60 bg-positive/5 px-1.5 py-px rounded">executed</span>
+                <span className="text-[0.55rem] text-positive/50 bg-positive/5 px-1.5 py-0.5 rounded-md border border-positive/10">✓</span>
               )}
             </div>
-            <span className="text-[0.6rem] text-muted-foreground">{formatDate(d.timestamp)}</span>
+            <span className="text-[0.6rem] text-muted-foreground mono">{formatDate(d.timestamp)}</span>
           </div>
-          <ConfidenceBar confidence={d.confidence} />
+
+          {/* Confidence bar - redesigned as horizontal bar with glow */}
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex-1 h-1 rounded-full bg-secondary overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  d.confidence >= 7 ? "bg-positive shadow-[0_0_8px_hsl(var(--positive)/0.3)]" :
+                  d.confidence >= 5 ? "bg-warning" : "bg-negative"
+                }`}
+                style={{ width: `${(d.confidence / 10) * 100}%` }}
+              />
+            </div>
+            <span className="mono text-[0.6rem] text-muted-foreground w-8">{d.confidence}/10</span>
+          </div>
+
           {d.key_signal && (
-            <p className="text-[0.72rem] text-secondary-foreground mt-1.5 leading-relaxed">{d.key_signal}</p>
+            <p className="text-[0.7rem] text-secondary-foreground leading-relaxed">{d.key_signal}</p>
+          )}
+          {d.company_name && (
+            <p className="text-[0.6rem] text-muted-foreground mt-1">{d.company_name}{d.sector ? ` · ${d.sector}` : ""}</p>
           )}
         </div>
       ))}

@@ -6,35 +6,26 @@ interface MarketHoursProps {
 
 export function MarketHours({ data }: MarketHoursProps) {
   return (
-    <div className="rounded-lg border border-border bg-card p-5 mb-3">
-      <div className="text-[0.6rem] font-bold uppercase tracking-widest text-muted-foreground mb-4">
-        Market Hours — Copenhagen Time (CET/CEST)
-      </div>
-      <div className="grid grid-cols-5 gap-3">
+    <div className="glass rounded-2xl p-6">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Market Sessions</h3>
+      <div className="flex gap-3">
         {data.markets.map((m) => (
           <div
             key={m.name}
-            className={`rounded-[0.6rem] border p-3.5 transition-colors ${
-              m.open ? "border-positive/30 bg-background" : "border-border bg-background"
+            className={`flex-1 rounded-xl p-3 transition-all ${
+              m.open
+                ? "bg-positive/5 border border-positive/20 shadow-[inset_0_1px_0_hsl(var(--positive)/0.1)]"
+                : "bg-secondary/30 border border-transparent"
             }`}
           >
-            <div className="flex items-center gap-1.5 mb-2">
-              <span className="text-lg leading-none">{m.flag}</span>
-              <span className={`text-[0.74rem] font-semibold flex-1 leading-tight ${
-                m.open ? "text-foreground" : "text-secondary-foreground"
-              }`}>
-                {m.name}
-              </span>
-              <span
-                className={`inline-block h-[7px] w-[7px] shrink-0 rounded-full ${
-                  m.open ? "bg-positive animate-pulse-glow shadow-[0_0_7px_hsl(var(--positive)/0.4)]" : "bg-muted-foreground"
-                }`}
-              />
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg">{m.flag}</span>
+              <div className={`h-1.5 w-1.5 rounded-full ${m.open ? "bg-positive animate-pulse-glow" : "bg-muted-foreground/30"}`} />
             </div>
-            <div className="mono text-[0.62rem] text-secondary-foreground mb-1.5">{m.hours} CET</div>
-            <div className={`text-[0.7rem] font-semibold ${m.open ? "text-positive" : "text-muted-foreground"}`}>
-              {m.status}
-            </div>
+            <p className={`text-[0.7rem] font-semibold mb-0.5 ${m.open ? "text-foreground" : "text-muted-foreground"}`}>
+              {m.name.split("(")[0].trim()}
+            </p>
+            <p className="mono text-[0.6rem] text-muted-foreground">{m.hours}</p>
           </div>
         ))}
       </div>

@@ -1,61 +1,57 @@
 import type { Trade } from "@/types/trading";
-import { formatCurrency, formatPnl, formatDate, pnlColorClass } from "@/lib/trading-utils";
+import { formatCurrency, formatDate, pnlColorClass } from "@/lib/trading-utils";
 
 interface TradesHistoryProps {
   trades: Trade[];
 }
 
-function ActionBadge({ action }: { action: string }) {
-  const u = (action || "HOLD").toUpperCase();
-  const styles = {
-    BUY: "bg-positive/15 text-positive",
-    SELL: "bg-negative/15 text-negative",
-  };
-  return (
-    <span className={`inline-block px-2.5 py-px rounded-full text-[0.68rem] font-bold tracking-wide ${styles[u as keyof typeof styles] || ""}`}>
-      {u}
-    </span>
-  );
-}
-
 export function TradesHistory({ trades }: TradesHistoryProps) {
   if (!trades.length) {
-    return <div className="text-muted-foreground text-center py-10 text-[0.85rem]">No trades yet</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+        <span className="text-3xl mb-3 opacity-30">📋</span>
+        <p className="text-sm">No trades yet</p>
+      </div>
+    );
   }
 
   const sorted = [...trades].reverse();
 
   return (
-    <div className="max-h-[600px] overflow-y-auto">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr>
-            {["Date", "Ticker", "Action", "Qty", "Price", "Realized P&L"].map((h) => (
-              <th key={h} className="text-left p-2 px-3 text-[0.62rem] font-bold uppercase tracking-widest text-muted-foreground border-b border-border">
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sorted.map((t, i) => (
-            <tr key={t.order_id || i} className="border-b border-background hover:bg-muted/30 transition-colors">
-              <td className="p-2.5 px-3 text-secondary-foreground text-[0.82rem]">{formatDate(t.timestamp)}</td>
-              <td className="p-2.5 px-3 font-bold text-foreground">{t.ticker}</td>
-              <td className="p-2.5 px-3"><ActionBadge action={t.action} /></td>
-              <td className="p-2.5 px-3 mono text-info">{t.qty}</td>
-              <td className="p-2.5 px-3 mono text-[0.82rem]">{formatCurrency(t.price)}</td>
-              <td className={`p-2.5 px-3 mono text-[0.82rem] ${
-                t.realized_pnl !== null && t.realized_pnl !== undefined
-                  ? pnlColorClass(t.realized_pnl)
-                  : "text-muted-foreground"
-              }`}>
-                {t.realized_pnl !== null && t.realized_pnl !== undefined ? formatPnl(t.realized_pnl) : "—"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="space-y-1 max-h-[600px] overflow-y-auto">
+      {sorted.map((t, i) => (
+        <div key={t.order_id || i} className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-secondary/30 transition-colors">
+          {/* Time */}
+          <span className="mono text-[0.7rem] text-muted-foreground w-32 shrink-0">{formatDate(t.timestamp)}</span>
+
+          {/* Action indicator */}
+          <div className={`h-8 w-1 rounded-full shrink-0 ${t.action === "BUY" ? "bg-positive" : "bg-negative"}`} />
+
+          {/* Ticker + action */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-foreground">{t.ticker}</span>
+              <span className={`text-[0.6rem] font-bold uppercase ${t.action === "BUY" ? "text-positive" : "text-negative"}`}>
+                {t.action}
+              </span>
+            </div>
+            <p className="text-[0.65rem] text-muted-foreground">
+              {t.qty} × {formatCurrency(t.price)}
+            </p>
+          </div>
+
+          {/* P&L */}
+          <div className="text-right w-24">
+            {t.realized_pnl !== null && t.realized_pnl !== undefined ? (
+              <span className={`mono text-sm font-bold ${pnlColorClass(t.realized_pnl)}`}>
+                {t.realized_pnl >= 0 ? "+" : ""}{formatCurrency(t.realized_pnl)}
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground/40">—</span>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

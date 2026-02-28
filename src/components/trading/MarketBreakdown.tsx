@@ -1,5 +1,5 @@
 import type { StatsData, Position } from "@/types/trading";
-import { formatCurrency, formatPnl, pnlColorClass, MARKET_FLAGS } from "@/lib/trading-utils";
+import { formatCurrency, pnlColorClass, MARKET_FLAGS } from "@/lib/trading-utils";
 
 interface MarketBreakdownProps {
   stats: StatsData;
@@ -20,57 +20,49 @@ export function MarketBreakdown({ stats, positions }: MarketBreakdownProps) {
 
   const activeMarkets = markets.filter((m) => {
     const s = bm[m];
-    const closed = s ? s.wins + s.losses : 0;
-    return closed > 0 || (openByMarket[m] || 0) > 0;
+    return (s && s.wins + s.losses > 0) || (openByMarket[m] || 0) > 0;
   });
 
-  const totalRealized = Object.values(bm).reduce((s, m) => s + m.pnl, 0);
-  const totalUnrealized = Object.values(unrealizedByMarket).reduce((s, v) => s + v, 0);
-  const grandTotal = totalRealized + totalUnrealized;
+  const marketColors: Record<string, string> = {
+    US: "from-primary/20 to-primary/5 border-primary/20",
+    EU: "from-info/20 to-info/5 border-info/20",
+    DK: "from-warning/20 to-warning/5 border-warning/20",
+    JP: "from-negative/20 to-negative/5 border-negative/20",
+    IN: "from-warning/20 to-warning/5 border-warning/20",
+    TW: "from-primary/20 to-primary/5 border-primary/20",
+    CA: "from-accent/20 to-accent/5 border-accent/20",
+  };
 
   return (
-    <div className="rounded-lg border border-border bg-card py-2 px-3.5 mb-3">
-      <div className="flex flex-col gap-0.5">
+    <div className="glass rounded-2xl p-6">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">By Market</h3>
+      <div className="grid grid-cols-3 gap-3">
         {activeMarkets.map((m) => {
           const s = bm[m] || { wins: 0, losses: 0, pnl: 0, win_rate: 0 };
-          const closedTotal = s.wins + s.losses;
-          const rPnl = s.pnl;
           const uPnl = unrealizedByMarket[m] || 0;
+          const total = s.pnl + uPnl;
           const openCnt = openByMarket[m] || 0;
-          const wr = closedTotal > 0 ? `${s.win_rate.toFixed(0)}%` : "—";
-          const wl = closedTotal > 0 ? `${s.wins}W · ${s.losses}L` : "—";
-          const mTotal = rPnl + uPnl;
 
           return (
-            <div key={m} className="py-1 border-t border-background first:border-t-0">
-              <div className="flex items-center justify-between text-[0.68rem]">
-                <span className={`font-semibold text-market-${m.toLowerCase()}`}>
-                  {MARKET_FLAGS[m]} {m}
-                </span>
-                <span className="text-secondary-foreground">{wl}</span>
-                <span className="text-secondary-foreground">{wr}</span>
-                <span className={`mono font-bold ${pnlColorClass(mTotal)}`}>
-                  {formatPnl(mTotal)}
+            <div key={m} className={`rounded-xl p-3.5 bg-gradient-to-br border ${marketColors[m] || marketColors.US}`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-lg">{MARKET_FLAGS[m]}</span>
+                <span className={`mono text-sm font-bold ${pnlColorClass(total)}`}>
+                  {total >= 0 ? "+" : ""}{formatCurrency(total)}
                 </span>
               </div>
-              <div className="flex justify-between text-[0.62rem] mt-0.5 pl-1">
-                <span className="text-muted-foreground">closed {formatPnl(rPnl)}</span>
-                {openCnt > 0 && (
-                  <span className={`mono text-[0.62rem] ${pnlColorClass(uPnl)}`}>
-                    {openCnt} open {formatPnl(uPnl)}
-                  </span>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">
+                  {s.wins}W · {s.losses}L
+                  {openCnt > 0 ? ` · ${openCnt} open` : ""}
+                </span>
+                {s.wins + s.losses > 0 && (
+                  <span className="text-xs font-medium text-secondary-foreground">{s.win_rate.toFixed(0)}%</span>
                 )}
               </div>
             </div>
           );
         })}
-        <div className="border-t border-muted-foreground/30 mt-1 pt-1.5 flex justify-between items-center text-[0.7rem]">
-          <span className="text-info font-bold">Total</span>
-          <span className="text-secondary-foreground text-[0.62rem]">{formatPnl(totalRealized)} realized</span>
-          <span className={`mono font-bold text-[0.75rem] ${pnlColorClass(grandTotal)}`}>
-            {formatPnl(grandTotal)}
-          </span>
-        </div>
       </div>
     </div>
   );
