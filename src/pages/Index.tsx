@@ -79,24 +79,9 @@ const Index = () => {
             {/* Hero metrics bar */}
             <HeroMetrics account={mockAccount} stats={mockStats} positions={mockPositions} />
 
-            {/* Equity chart */}
-            <div className="glass rounded-2xl p-6">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Portfolio Equity — Today</h3>
-              <EquityChart data={mockEquity} />
-            </div>
-
-            {/* Bento grid: Markets + Positions + Decisions */}
+            {/* Bento grid: Positions + Decisions on top */}
             <div className="grid grid-cols-12 gap-6">
-              {/* Left column: Market hours + Risk */}
-              <div className="col-span-3 space-y-6">
-                <MarketHours data={mockMarketHours} />
-                <div className="glass rounded-2xl p-6">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Risk & Exposure</h3>
-                  <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
-                </div>
-              </div>
-
-              {/* Center: Positions + Pending Orders */}
+              {/* Left: Positions + Pending Orders */}
               <div className="col-span-5 space-y-6">
                 <div className="glass rounded-2xl p-6">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Open Positions</h3>
@@ -116,9 +101,9 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Right: AI Decisions + Market Breakdown */}
-              <div className="col-span-4 space-y-6">
-                <div className="glass rounded-2xl p-6">
+              {/* Center: AI Decisions */}
+              <div className="col-span-4">
+                <div className="glass rounded-2xl p-6 h-full">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="h-5 w-5 rounded-lg bg-accent/10 flex items-center justify-center">
                       <span className="text-xs">🤖</span>
@@ -127,7 +112,28 @@ const Index = () => {
                   </div>
                   <DecisionsFeed decisions={mockDecisions} />
                 </div>
+              </div>
+
+              {/* Right: Market hours + Market breakdown */}
+              <div className="col-span-3 space-y-6">
+                <MarketHours data={mockMarketHours} />
                 <MarketBreakdown stats={mockStats} positions={mockPositions} />
+              </div>
+            </div>
+
+            {/* Secondary row: Equity chart (compact) + Risk panel */}
+            <div className="grid grid-cols-12 gap-6">
+              <div className="col-span-8">
+                <div className="glass rounded-2xl p-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Equity — Today</h3>
+                  <EquityChart data={mockEquity} />
+                </div>
+              </div>
+              <div className="col-span-4">
+                <div className="glass rounded-2xl p-5">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Risk & Exposure</h3>
+                  <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
+                </div>
               </div>
             </div>
           </div>
