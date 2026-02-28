@@ -34,9 +34,9 @@ export function MarketBreakdown({ stats, positions }: MarketBreakdownProps) {
   };
 
   return (
-    <div className="glass rounded-2xl p-6">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">By Market</h3>
-      <div className="grid grid-cols-3 gap-3">
+    <div className="glass rounded-2xl p-5">
+      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">By Market</h3>
+      <div className="space-y-2">
         {activeMarkets.map((m) => {
           const s = bm[m] || { wins: 0, losses: 0, pnl: 0, win_rate: 0 };
           const uPnl = unrealizedByMarket[m] || 0;
@@ -44,21 +44,24 @@ export function MarketBreakdown({ stats, positions }: MarketBreakdownProps) {
           const openCnt = openByMarket[m] || 0;
 
           return (
-            <div key={m} className={`rounded-xl p-3.5 bg-gradient-to-br border ${marketColors[m] || marketColors.US}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-lg">{MARKET_FLAGS[m]}</span>
-                <span className={`mono text-sm font-bold ${pnlColorClass(total)}`}>
-                  {total >= 0 ? "+" : ""}{formatCurrency(total)}
-                </span>
-              </div>
+            <div key={m} className={`rounded-xl p-3 bg-gradient-to-r border ${marketColors[m] || marketColors.US}`}>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">
-                  {s.wins}W · {s.losses}L
-                  {openCnt > 0 ? ` · ${openCnt} open` : ""}
-                </span>
-                {s.wins + s.losses > 0 && (
-                  <span className="text-xs font-medium text-secondary-foreground">{s.win_rate.toFixed(0)}%</span>
-                )}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">{MARKET_FLAGS[m]}</span>
+                  <span className="text-xs font-semibold text-foreground">{m}</span>
+                  <span className="text-[0.55rem] text-muted-foreground">
+                    {s.wins}W·{s.losses}L
+                    {openCnt > 0 ? ` · ${openCnt} open` : ""}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {s.wins + s.losses > 0 && (
+                    <span className="text-[0.6rem] text-muted-foreground">{s.win_rate.toFixed(0)}%</span>
+                  )}
+                  <span className={`mono text-xs font-bold ${pnlColorClass(total)}`}>
+                    {total >= 0 ? "+" : ""}{formatCurrency(total)}
+                  </span>
+                </div>
               </div>
             </div>
           );
