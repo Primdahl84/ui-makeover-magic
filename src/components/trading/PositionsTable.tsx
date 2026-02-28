@@ -52,9 +52,9 @@ export function PositionsTable({ positions, onSell }: PositionsTableProps) {
                       {p.market}
                     </span>
                   </div>
-                  {p.company && (
-                    <p className="text-[0.6rem] text-muted-foreground mt-0.5">{p.company}</p>
-                  )}
+                  <p className="text-[0.6rem] text-muted-foreground mt-0.5">
+                    {p.company}{p.country ? ` · ${p.country}` : ""}
+                  </p>
                 </td>
                 <td className="px-3 py-3 mono text-sm text-foreground">{p.qty}</td>
                 <td className="px-3 py-3 mono text-sm text-secondary-foreground">{formatCurrency(p.avg_entry_price)}</td>
