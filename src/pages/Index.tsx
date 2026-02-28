@@ -80,7 +80,7 @@ const Index = () => {
             <HeroMetrics account={mockAccount} stats={mockStats} positions={mockPositions} />
 
             {/* Bento grid: Positions + Decisions on top */}
-            <div className="grid grid-cols-12 gap-6">
+            <div className="grid grid-cols-12 gap-6 items-stretch">
               {/* Left: Positions + Pending Orders */}
               <div className="col-span-5 space-y-6">
                 <div className="glass rounded-2xl p-6">
