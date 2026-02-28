@@ -36,7 +36,7 @@ export function EquityChart({ data }: EquityChartProps) {
         <span className="text-[0.6rem] text-muted-foreground">today</span>
       </div>
 
-      <ResponsiveContainer width="100%" height={200}>
+      <ResponsiveContainer width="100%" height={140}>
         <AreaChart data={data} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <defs>
             <linearGradient id="equityGrad" x1="0" y1="0" x2="0" y2="1">
