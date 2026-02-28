@@ -1,35 +1,24 @@
 /*
- * Lovable Dashboard Theme — Drop-in replacement for web_dashboard.py <style> block
- * 
- * INSTRUCTIONS FOR CLAUDE CODE:
- * Replace the entire <style>...</style> section in web_dashboard.py's HTML_TEMPLATE
- * with the contents of this file (wrapped in <style> tags).
+ * Lovable Dashboard Theme — COMPLETE drop-in replacement
+ * for the <style>...</style> block in web_dashboard.py
  *
- * KEY DIFFERENCES from the old theme:
- * 1. Background: neutral dark (240° hue) instead of blue (215° hue)
- * 2. Glass cards: neutral tint instead of blue tint
- * 3. Active tab: uses primary teal color instead of subtle grey
- * 4. Borders: neutral grey instead of blue-grey
- * 5. Overall: more contrast, cleaner, less blue cast
+ * INSTRUCTIONS FOR CLAUDE CODE:
+ * 1. Replace the ENTIRE <style>...</style> section in web_dashboard.py with this CSS
+ * 2. Then do the inline style replacements listed at the bottom of this file
  */
 
 :root {
-  /* Core palette — neutral dark, NOT blue-tinted */
   --bg:          hsl(240, 15%, 5%);
   --card:        hsl(240, 12%, 8%);
-  --primary:     hsl(165, 80%, 48%);   /* Teal/cyan */
-  --accent:      hsl(270, 60%, 60%);   /* Purple */
+  --primary:     hsl(165, 80%, 48%);
+  --accent:      hsl(270, 60%, 60%);
   --positive:    hsl(165, 80%, 48%);
   --negative:    hsl(0, 85%, 62%);
   --warning:     hsl(45, 95%, 55%);
   --info:        hsl(215, 80%, 60%);
-
-  /* Text */
   --fg:          hsl(0, 0%, 95%);
   --fg-dim:      hsl(240, 5%, 65%);
   --muted-fg:    hsl(240, 5%, 40%);
-
-  /* Surfaces */
   --secondary:   hsl(240, 10%, 12%);
   --border:      hsl(240, 10%, 14%);
   --border-dim:  hsl(240, 10%, 18%);
@@ -41,7 +30,7 @@ body {
   background:
     radial-gradient(ellipse 100% 50% at 15% 0%, hsl(165 80% 48% / 0.06) 0%, transparent 50%),
     radial-gradient(ellipse 60% 40% at 85% 5%, hsl(270 60% 60% / 0.04) 0%, transparent 50%),
-    var(--bg);
+    hsl(240, 15%, 5%);
   color: var(--fg);
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
@@ -64,7 +53,6 @@ body {
   border: 1px solid hsl(165 80% 48% / 0.15) !important;
   box-shadow: 0 0 40px hsl(165 80% 48% / 0.04), inset 0 1px 0 hsl(165 80% 48% / 0.08);
 }
-
 .gradient-border::before {
   content: '';
   position: absolute;
@@ -79,12 +67,8 @@ body {
 }
 
 .section-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--muted-fg);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.75rem;
+  font-size: 0.65rem; font-weight: 700; color: var(--muted-fg);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
 }
 
 /* ── Action Badges ── */
@@ -92,21 +76,21 @@ body {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 9px; border-radius: 9999px;
   font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
-  background: hsl(165 80% 48% / 0.12); color: hsl(165 80% 48%);
+  background: hsl(165 80% 48% / 0.12); color: hsl(165, 80%, 48%);
   border: 1px solid hsl(165 80% 48% / 0.3);
 }
 .badge-sell {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 9px; border-radius: 9999px;
   font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
-  background: hsl(0 85% 62% / 0.12); color: hsl(0 85% 62%);
+  background: hsl(0 85% 62% / 0.12); color: hsl(0, 85%, 62%);
   border: 1px solid hsl(0 85% 62% / 0.3);
 }
 .badge-hold {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 2px 9px; border-radius: 9999px;
   font-size: 0.64rem; font-weight: 700; letter-spacing: 0.06em;
-  background: hsl(270 60% 60% / 0.12); color: hsl(270 60% 60%);
+  background: hsl(270 60% 60% / 0.12); color: hsl(270, 60%, 60%);
   border: 1px solid hsl(270 60% 60% / 0.3);
 }
 .badge-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
@@ -161,8 +145,8 @@ tr:hover td { background: hsl(240 10% 12% / 0.4); }
 }
 .tab-btn:hover { color: var(--fg-dim); background: hsl(240 10% 12% / 0.5); }
 .tab-active {
-  background: hsl(165 80% 48%) !important;
-  color: hsl(240 15% 5%) !important;
+  background: hsl(165, 80%, 48%) !important;
+  color: hsl(240, 15%, 5%) !important;
   font-weight: 700;
   box-shadow: 0 2px 12px hsl(165 80% 48% / 0.3);
 }
@@ -174,13 +158,13 @@ tr:hover td { background: hsl(240 10% 12% / 0.4); }
   vertical-align: middle; margin-left: 4px;
   letter-spacing: 0.04em; text-transform: uppercase;
 }
-.mkt-US { background: hsl(165 80% 48% / 0.15); color: hsl(165 80% 48%); }
-.mkt-EU { background: hsl(215 80% 60% / 0.15); color: hsl(215 80% 60%); }
-.mkt-DK { background: hsl(45 95% 55% / 0.15);  color: hsl(45 95% 55%); }
-.mkt-JP { background: hsl(15 75% 55% / 0.15);  color: hsl(15 75% 55%); }
-.mkt-IN { background: hsl(35 85% 55% / 0.15);  color: hsl(35 85% 55%); }
-.mkt-TW { background: hsl(180 50% 60% / 0.15); color: hsl(180 50% 60%); }
-.mkt-CA { background: hsl(270 40% 65% / 0.15); color: hsl(270 40% 65%); }
+.mkt-US { background: hsl(165 80% 48% / 0.15); color: hsl(165, 80%, 48%); }
+.mkt-EU { background: hsl(215 80% 60% / 0.15); color: hsl(215, 80%, 60%); }
+.mkt-DK { background: hsl(45 95% 55% / 0.15);  color: hsl(45, 95%, 55%); }
+.mkt-JP { background: hsl(15 75% 55% / 0.15);  color: hsl(15, 75%, 55%); }
+.mkt-IN { background: hsl(35 85% 55% / 0.15);  color: hsl(35, 85%, 55%); }
+.mkt-TW { background: hsl(180 50% 60% / 0.15); color: hsl(180, 50%, 60%); }
+.mkt-CA { background: hsl(270 40% 65% / 0.15); color: hsl(270, 40%, 65%); }
 
 /* ── Hero Stat Tiles ── */
 .hero-stat {
@@ -239,7 +223,7 @@ tr:hover .cancel-btn-wrap { opacity: 1; }
 }
 .ctrl-btn-sell {
   background: hsl(0 85% 55% / 0.15);
-  color: hsl(0 85% 62%);
+  color: hsl(0, 85%, 62%);
   border: 1px solid hsl(0 85% 55% / 0.4);
   text-shadow: 0 0 10px hsl(0 85% 55% / 0.3);
 }
@@ -249,7 +233,7 @@ tr:hover .cancel-btn-wrap { opacity: 1; }
 }
 .ctrl-btn-resume {
   background: hsl(165 80% 48% / 0.15);
-  color: hsl(165 80% 48%);
+  color: hsl(165, 80%, 48%);
   border: 1px solid hsl(165 80% 48% / 0.4);
   text-shadow: 0 0 10px hsl(165 80% 48% / 0.3);
 }
@@ -271,6 +255,3 @@ body::after {
   pointer-events: none;
   z-index: 999;
 }
-
-/* ── Navbar (update inline styles too) ── */
-/* Navbar background should be: hsl(240 15% 5% / 0.95) with border hsl(240 10% 14% / 0.6) */
