@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatCurrency } from "@/lib/trading-utils";
 import { Navbar } from "@/components/trading/Navbar";
 import { HeroMetrics } from "@/components/trading/HeroMetrics";
 import { MarketHours } from "@/components/trading/MarketHours";
