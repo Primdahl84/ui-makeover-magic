@@ -121,17 +121,17 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Secondary row: Equity chart (compact) + Risk panel */}
+            {/* Secondary row: Equity chart (compact) + Risk panel (larger) */}
             <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-8">
+              <div className="col-span-5">
                 <div className="glass rounded-2xl p-5">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Equity — Today</h3>
                   <EquityChart data={mockEquity} />
                 </div>
               </div>
-              <div className="col-span-4">
-                <div className="glass rounded-2xl p-5">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Risk & Exposure</h3>
+              <div className="col-span-7">
+                <div className="glass rounded-2xl p-6">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Risk & Exposure</h3>
                   <RiskPanel positions={mockPositions} portfolioValue={mockAccount.portfolio_value} />
                 </div>
               </div>
